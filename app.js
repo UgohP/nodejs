@@ -24,9 +24,8 @@ let people = require('./data')
 app.use(express.static('./methods-public'))
 app.use(express.urlencoded({ extended: false }))
 
-app.get('/api/people', (req, res) => {
-    res.status(200).json({ success: true, data: people })
-})
+app.use(express.json())
+
 app.post('/login', (req, res) => {
     const { name } = req.body
     if (name) {
@@ -34,6 +33,25 @@ app.post('/login', (req, res) => {
     }
     res.status(401).send("Please enter a name")
 })
+
+app.get('/api/people', (req, res) => {
+    res.status(200).json({ success: true, data: people })
+})
+
+app.post('/api/people', (req, res) => {
+    const name = req.body
+    if (!name) {
+        res.status(400).json({ success: false, msg: 'Please provide a name' })
+    }
+    res.status(201).json({ success: true, person: name })
+})
+app.post('/api/people/postman', (req, res) => {
+    const name = req.body
+    if (!name) {
+        res, status(400).json({ success: false, msq: "Please enter a name" })
+    }
+    res.status(200).json({ success: true, meq: [...people, name] })
+})
 app.listen(5000, () => {
-    console.log('App is listening on port 2000')
+    console.log('App is listening on port 5000')
 })
